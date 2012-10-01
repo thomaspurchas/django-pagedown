@@ -14,19 +14,20 @@ class PagedownWidget(forms.Textarea):
         js = ('%s/pagedown/Markdown.Converter.js' % settings.STATIC_URL,
               '%s/pagedown/Markdown.Sanitizer.js' % settings.STATIC_URL,
               '%s/pagedown/Markdown.Editor.js' % settings.STATIC_URL,)
-    
+
     def render(self, name, value, attrs=None):
         if value is None: value = ''
         if 'class' not in attrs:
             attrs['class'] = ""
-        attrs['class'] += " wmd-input"
+        attrs['class'] += " wmd-input resizable"
         final_attrs = self.build_attrs(attrs, name=name)
         html = """
             <div class="wmd-wrapper">
                 <div class="wmd-panel">
-                <div id="%(id)s_wmd_button_bar"></div>
+                <div id="%(id)s_wmd_button_bar" class="wmd-button-bar boxsizingBorder"></div>
                 <textarea%(attrs)s>%(body)s</textarea>
                 </div>
+                <h4>Preview:</h4>
                 <div id="%(id)s_wmd_preview" class="wmd-panel wmd-preview"></div>
             </div>
             <script type="text/javascript">
@@ -34,7 +35,7 @@ class PagedownWidget(forms.Textarea):
                     var converter = Markdown.getSanitizingConverter();
                     selectors = {
                         input : "%(id)s",
-                        button : "%(id)s_wmd_button_bar", 
+                        button : "%(id)s_wmd_button_bar",
                         preview : "%(id)s_wmd_preview",
                     }
                     var editor = new Markdown.Editor(converter, selectors);
@@ -47,11 +48,9 @@ class PagedownWidget(forms.Textarea):
                 'id' : attrs['id'],
             }
         return mark_safe(html)
-        
+
 class AdminPagedownWidget(admin_widgets.AdminTextareaWidget, PagedownWidget):
     class Media:
         css = {
             'all' : ('admin/css/pagedown.css',)
         }
-    
-    
