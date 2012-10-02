@@ -9,11 +9,12 @@ from django.utils.safestring import mark_safe
 class PagedownWidget(forms.Textarea):
     class Media:
         css = {
-            'all' : ('pagedown/demo/browser/demo.css',)
+            'all' : ('pagedown/pagedown.css',)
         }
         js = ('%s/pagedown/Markdown.Converter.js' % settings.STATIC_URL,
               '%s/pagedown/Markdown.Sanitizer.js' % settings.STATIC_URL,
-              '%s/pagedown/Markdown.Editor.js' % settings.STATIC_URL,)
+              '%s/pagedown/Markdown.Editor.js' % settings.STATIC_URL,
+              '%s/textarea-resize/textarea-resize.js' % settings.STATIC_URL)
 
     def render(self, name, value, attrs=None):
         if value is None: value = ''
@@ -40,6 +41,9 @@ class PagedownWidget(forms.Textarea):
                     }
                     var editor = new Markdown.Editor(converter, selectors);
                     editor.run();
+                    $(document).ready(function() {
+                    $('textarea.resizable:not(.processed)').TextAreaResizer();
+                    });
                 })();
             </script>
             """ % {
