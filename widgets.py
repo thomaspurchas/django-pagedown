@@ -20,6 +20,8 @@ class PagedownWidget(forms.Textarea):
         if value is None: value = ''
         if 'class' not in attrs:
             attrs['class'] = ""
+        if 'id' not in attrs:
+            attrs['id'] = 'id_%s_' % name
         attrs['class'] += " wmd-input resizable"
         final_attrs = self.build_attrs(attrs, name=name)
         html = """
